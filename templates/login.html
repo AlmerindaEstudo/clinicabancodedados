@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body {
+            background-color: #f0f4f8; /* Fundo claro e suave */
+            color: #333;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+        }
+
+        h1 {
+            color: #007BFF; /* Azul hospitalar */
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        label {
+            display: block;
+            margin: 15px 0 5px;
+            font-size: 1rem;
+            color: #007BFF; /* Azul hospitalar */
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px 40px 10px 10px;
+            border: 1px solid #007BFF; /* Azul hospitalar */
+            border-radius: 5px;
+            background-color: #fff;
+            color: #333;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            border-color: #0056b3; /* Azul mais escuro no foco */
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            width: 24px;
+            height: 24px;
+        }
+
+        button {
+            background-color: #007BFF; /* Azul hospitalar */
+            color: #fff;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            width: 100%;
+            margin-top: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3; /* Azul mais escuro no hover */
+        }
+
+        .messages {
+            margin-top: 20px;
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .messages li {
+            background-color: #f8f9fa;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #007BFF; /* Azul hospitalar */
+            color: #333;
+        }
+
+        .messages .error {
+            background-color: #f8d7da;
+            border-color: #f44336;
+            color: #721c24;
+        }
+
+        .messages .success {
+            background-color: #d4edda;
+            border-color: #4CAF50;
+            color: #155724;
+        }
+    </style>
+    <script>
+        // Função para alternar a visibilidade da senha
+        function togglePassword() {
+            var senhaField = document.getElementById("senha");
+            var eyeIcon = document.getElementById("eye-icon");
+
+            if (senhaField.type === "password") {
+                senhaField.type = "text";
+                eyeIcon.src = "https://img.icons8.com/ios-filled/50/007BFF/visible.png"; /* Ícone de olho aberto */
+            } else {
+                senhaField.type = "password";
+                eyeIcon.src = "https://img.icons8.com/ios-filled/50/007BFF/invisible.png"; /* Ícone de olho fechado */
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Login</h1>
+    <form method="POST" action="/login">
+        <!-- Campo de Usuário -->
+        <label for="username">Usuário:</label>
+        <div class="input-group">
+            <input type="text" id="username" name="username" required>
+        </div>
+
+        <!-- Campo de Senha -->
+        <label for="senha">Senha:</label>
+        <div class="input-group">
+            <input type="password" id="senha" name="senha" required>
+            <img id="eye-icon" class="toggle-password" src="https://img.icons8.com/ios-filled/50/007BFF/invisible.png" onclick="togglePassword()">
+        </div>
+
+        <!-- Botão de Entrar -->
+        <button type="submit">Entrar</button>
+
+        <!-- Mensagens de feedback -->
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                        <li class="{{ 'error' if 'erro' in message.lower() else 'success' }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+    </form>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página do Usuário</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            padding: 20px;
+        }
+        .container {
+            width: 50%;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center; /* Centraliza o conteúdo */
+        }
+        h1 {
+            text-align: center;
+            color: #4CAF50;
+        }
+        .info {
+            font-size: 18px;
+            margin: 20px 0;
+        }
+        .info p {
+            margin: 10px 0;
+        }
+        .welcome {
+            font-size: 22px;
+            color: #007BFF;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .btn {
+            display: block;
+            width: 80%;
+            max-width: 300px;
+            padding: 15px;
+            margin: 10px auto;
+            font-size: 18px;
+            color: #fff;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .btn-relatorio {
+            background-color: #28a745;
+        }
+        .btn-relatorio:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Página do Usuário</h1>
+        
+        <div class="welcome">
+            <p>Bem-vindo(a), {{ username }}!</p>
+        </div>
+
+        <div class="info">
+            <p><strong>Nome:</strong> {{ username }}</p>
+            <p><strong>CPF:</strong> {{ cpf }}</p>
+        </div>
+
+        <!-- Botões adicionados aqui -->
+        <a href="/marcar_consulta" class="btn">Marcar Consulta</a>
+        <a href="/ver_relatorio" class="btn btn-relatorio">Ver Relatório</a>
+    </div>
+</body>
+</html>

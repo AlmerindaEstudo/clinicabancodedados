@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marcar Consulta</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            padding: 20px;
+        }
+        .container {
+            width: 50%;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #4CAF50;
+        }
+        label {
+            display: block;
+            margin: 15px 0 5px;
+            font-weight: bold;
+        }
+        select, input[type="date"], input[type="time"], textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .horarios-disponiveis {
+            margin-top: 20px;
+        }
+        .horarios-disponiveis ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .horarios-disponiveis li {
+            display: inline-block;
+            margin: 5px;
+            padding: 10px;
+            background-color: #f1f1f1;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Marcar Consulta</h1>
+        <form action="/salvar_consulta" method="POST">
+            <!-- Selecionar Médico -->
+            <label for="medico">Médico:</label>
+            <select id="medico" name="medico" required>
+                <option value="">Selecione um médico</option>
+                {% for medico in medicos %}
+                    <option value="{{ medico.id }}">{{ medico.nome }} ({{ medico.crm }})</option>
+                {% endfor %}
+            </select>
+
+            <!-- Selecionar Data -->
+            <label for="data_consulta">Data da Consulta:</label>
+            <input type="date" id="data_consulta" name="data_consulta" required>
+
+            <!-- Botão para verificar horários disponíveis -->
+            <button type="button" id="verificarHorarios">Verificar Horários Disponíveis</button>
+
+            <!-- Exibir horários disponíveis -->
+            <div class="horarios-disponiveis" id="horariosDisponiveis">
+                {% if horarios_disponiveis %}
+                    <h3>Horários Disponíveis:</h3>
+                    <ul>
+                        {% for horario in horarios_disponiveis %}
+                            <li>
+                                <input type="radio" name="hora_consulta" value="{{ horario }}" required> {{ horario }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+
+            <!-- Campo de Observações (opcional) -->
+            <label for="observacoes">Observações:</label>
+            <textarea id="observacoes" name="observacoes" rows="4"></textarea>
+
+            <!-- Botão para enviar o formulário -->
+            <button type="submit">Marcar Consulta</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('verificarHorarios').addEventListener('click', function() {
+            const medicoId = document.getElementById('medico').value;
+            const dataConsulta = document.getElementById('data_consulta').value;
+
+            if (!medicoId || !dataConsulta) {
+                alert("Selecione um médico e uma data.");
+                return;
+            }
+
+            // Enviar requisição para o servidor
+            fetch(`/verificar_horarios?medico_id=${medicoId}&data_consulta=${dataConsulta}`)
+                .then(response => response.json())
+                .then(data => {
+                    const horariosDiv = document.getElementById('horariosDisponiveis');
+                    if (data.horarios_disponiveis && data.horarios_disponiveis.length > 0) {
+                        let html = '<h3>Horários Disponíveis:</h3><ul>';
+                        data.horarios_disponiveis.forEach(horario => {
+                            html += `<li><input type="radio" name="hora_consulta" value="${horario}" required> ${horario}</li>`;
+                        });
+                        html += '</ul>';
+                        horariosDiv.innerHTML = html;
+                    } else {
+                        horariosDiv.innerHTML = '<p>Não há horários disponíveis para o médico na data escolhida.</p>';
+                    }
+                })
+                .catch(error => {
+                    console.error("Erro ao buscar horários disponíveis:", error);
+                });
+        });
+    </script>
+</body>
+</html>
